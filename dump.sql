@@ -33,7 +33,7 @@ CREATE TABLE "public"."urls" (
 );
 
 
-ALTER TABLE ONLY public.urls;
+ALTER TABLE public.urls OWNER TO postgres;
 
 --
 -- Name: urlsUsers; Type: TABLE; Schema: public; Owner: -
@@ -46,7 +46,7 @@ CREATE TABLE "public"."urlsUsers" (
 );
 
 
-ALTER TABLE ONLY public."urlsUsers";
+ALTER TABLE public."urlsUsers" OWNER TO postgres;
 
 --
 -- Name: urlsUsers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
@@ -61,7 +61,7 @@ CREATE SEQUENCE "public"."urlsUsers_id_seq"
     CACHE 1;
 
 
-ALTER TABLE ONLY public."urlsUsers_id_seq";
+ALTER TABLE public."urlsUsers_id_seq" OWNER TO postgres;
 
 --
 -- Name: urlsUsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
@@ -83,7 +83,7 @@ CREATE SEQUENCE "public"."urls_id_seq"
     CACHE 1;
 
 
-ALTER TABLE ONLY public.urls_id_seq;
+ALTER TABLE public.urls_id_seq OWNER TO postgres;
 
 --
 -- Name: urls_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
@@ -105,7 +105,7 @@ CREATE TABLE "public"."users" (
 );
 
 
-ALTER TABLE ONLY public.users;
+ALTER TABLE public.users OWNER TO postgres;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
@@ -120,7 +120,7 @@ CREATE SEQUENCE "public"."users_id_seq"
     CACHE 1;
 
 
-ALTER TABLE ONLY public.users_id_seq;
+ALTER TABLE public.users_id_seq OWNER TO postgres;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
@@ -153,6 +153,7 @@ ALTER TABLE ONLY "public"."users" ALTER COLUMN "id" SET DEFAULT "nextval"('"publ
 --
 -- Data for Name: urls; Type: TABLE DATA; Schema: public; Owner: -
 --
+
 
 COPY "public"."urls" ("id", "url", "shortUrl", "visitCount", "createdAt") FROM stdin;
 1	https://google.com	4P85IttAhR	0	2022-08-05 17:40:07.516063
