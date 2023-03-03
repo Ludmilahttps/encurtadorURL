@@ -10,4 +10,4 @@ export const getRanking = async (req, res) => {
       .status(500)
       .send(`Internal system error.\n More details: ${error.message}`)
   }
-};
+}
