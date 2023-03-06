@@ -3,14 +3,14 @@ import { urlModel } from "../schemas/index.js"
 
 export const NANOID_PARAM = 10
 
-export const postShortUrl = async (req, res) => {
+export const postUrl = async (req, res) => {
   const userId = res.locals.id
   const { url } = res.locals.url
   const shortUrl = nanoid(NANOID_PARAM)
   const urlObject = {
     url,
     shortUrl,
-  };
+  }
 
   try {
     const shortUrlAlreadyExists = await checkUrlAlreadyPosted(userId, url)
@@ -27,14 +27,14 @@ export const postShortUrl = async (req, res) => {
       .status(500)
       .send(`Internal system error.\n More details: ${error.message}`)
   }
-};
+}
 
 export const getUrlById = (req, res) => {
   const { response } = res.locals
   res.status(200).send(response)
-};
+}
 
-export const openShortUrl = async (req, res) => {
+export const openUrl = async (req, res) => {
   const { shortUrl } = res.locals
   try {
     const { visitCount, url } = await urlModel.getVisitsCountByShortUrl(
@@ -48,7 +48,7 @@ export const openShortUrl = async (req, res) => {
       .status(500)
       .send(`Internal system error.\n More details: ${error.message}`)
   }
-};
+}
 
 export const deleteUrl = async (req, res) => {
   const { urlId } = res.locals;

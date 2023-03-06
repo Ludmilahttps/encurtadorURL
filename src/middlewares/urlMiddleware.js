@@ -2,128 +2,119 @@ import dotenv from "dotenv"
 import jwt from "jsonwebtoken"
 import { urlModel } from "../schemas/index.js"
 import { urlController } from "../controllers/index.js"
+import { request, response } from "express"
 
 dotenv.config()
 
-export const validateUrl = (req, res, next) => {
-  const validate = urlModel.urlSchema.validate(req.body)
+export const validateUrl = (request, response, next) => {
+  const validate = urlModel.urlSchema.validate(request.body)
   if (validate.error) {
-    return res
+    return response
       .status(422)
       .send(`Some error with JSON body: ${validate.error.message}`)
   }
 
-  const url = {
-    url: validate.value.url,
-  }
-
-  res.locals.url = url
+  const url = { url: validate.value.url, }
+  response.locals.url = url
   next()
   return true
 }
 
-export const validateHeader = (req, res, next) => {
-  const headerValidation = urlModel.tokenSchema.validate(req.headers)
-  if (headerValidation.error) {
-    return res
+export const validateHeader = (req, response, next) => {
+  const Validation = urlModel.tokenSchema.validate(request.headers)
+
+  if (Validation.error) {
+    return response
       .status(401)
-      .send(`Invalid token: ${headerValidation.error.message}`)
+      .send(`Invalid token: ${Validation.error.message}`)
   }
 
-  const token = {
-    token: headerValidation.value.authorization.split(" ")[1],
-  }
-
-  res.locals.token = token
+  const token = { token: Validation.value.authorization.split(" ")[1],}
+  response.locals.token = token
   next()
   return true
 }
 
-export const checkTokenBelongsSomeUser = (req, res, next) => {
-  const { token } = res.locals.token
-  const { JWT_SECRET } = process.env
+export const checkToken = (request, response, next) => {
+  const { token } = response.locals.token
 
   try {
-    const { userId } = jwt.verify(token, JWT_SECRET)
-    res.locals.id = userId
+    const { userId } = jwt.verify(token)
+    response.locals.id = userId
     next()
     return true
   } catch (error) {
-    res
+    response
       .status(404)
-      .send(`Internal system error.\n More details: ${error.message}`)
+      .send(`Internal system error.`)
   }
-};
+}
 
-export const validateParamsId = (req, res, next) => {
-  const id = Number(req.params.id)
+export const validateParamsId = (request, response, next) => {
+  const id = Number(request.params.id)
   const NotANumber = isNaN(id)
   const isInteger = Number.isInteger(id)
-  if (NotANumber || !isInteger)
-    return res.status(404).send("id is not a integer number!")
-
-  res.locals.urlId = id
+  if (NotANumber || !isInteger) return response.status(404).send("id is not a integer number!")
+  response.locals.urlId = id
   next()
   return true
-};
+}
 
-export const checkParamsIdbelongsSomeUrl = async (req, res, next) => {
-  const { urlId } = res.locals
+export const checkUrl = async (request, response, next) => {
+  const { urlId } = response.locals
   try {
-    const response = await urlModel.getUrlsById(urlId)
-    if (!response) return res.status(404).send("id doesn't belong any url!")
+    const response = await urlModel.getUrlId(urlId)
+    if (!response) return response.status(404).send("id doesn't belong any url!")
 
-    res.locals.response = response
+    response.locals.response = response
   } catch (error) {
-    res
+    response
       .status(500)
-      .send(`Internal system error.\n More details: ${error.message}`)
+      .send(`Internal system error.`)
   }
 
   next()
   return true
-};
+}
 
-export const validateParamsShortUrl = (req, res, next) => {
-  const { shortUrl } = req.params
+export const validateParamsUrl = (request, response, next) => {
+  const { shortUrl } = request.params
   const invalidSize = shortUrl.length !== urlController.NANOID_PARAM
 
-  if (invalidSize) return res.status(422).send("Invalid shortUrl sent!")
-
-  res.locals.shortUrl = shortUrl
+  if (invalidSize) return response.status(422).send("Invalid shortUrl sent!")
+  response.locals.shortUrl = shortUrl
   next()
   return true
-};
+}
 
-export const checkParamsShortUrlExists = async (req, res, next) => {
-  const { shortUrl } = res.locals;
+export const checkUrlExists = async (request, response, next) => {
+  const { shortUrl } = response.locals;
 
   try {
-    const idExists = await urlModel.getUrlIdByShortUrl(shortUrl);
-    if (!idExists) return res.status(404).send("ShortUrl does not exist!")
+    const idExists = await urlModel.getShortUrl(shortUrl);
+    if (!idExists) return response.status(404).send("ShortUrl does not exist!")
   } catch (error) {
-    res
+    response
       .status(500)
-      .send(`Internal system error.\n More details: ${error.message}`)
+      .send(`Internal system error.`)
   }
   next()
   return true
-};
+}
 
-export const checkUserTokenBelongsToUrlOwner = async (req, res, next) => {
-  const userTokenId = res.locals.id
-  const { urlId } = res.locals
+export const checkUserUrl = async (request, response, next) => {
+  const userTokenId = response.locals.id
+  const { urlId } = response.locals
   try {
-    const tokenIdIsValid = await urlModel.getUserIdByUrlIdAndTokenId(
+    const IsValid = await urlModel.getUserId(
       urlId,
       userTokenId
-    );
-    if (!tokenIdIsValid)
-      return res.status(401).send("Token does not belong to the url sent!")
+    )
+    if (!IsValid) return response.status(401).send("Token does not belong to the url sent!")
   } catch (error) {
-    res
+    response
       .status(500)
-      .send(`Internal system error.\n More details: ${error.message}`)
+      .send(`Internal system error.`)
   }
 
   next()

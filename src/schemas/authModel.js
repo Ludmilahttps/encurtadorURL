@@ -2,34 +2,32 @@ import joi from "joi"
 import { connection } from "./index.js"
 import { queries } from "./index.js"
 
-export const emailAlreadyExists = async (email) => {
+export const emailExists = async (email) => {
   const { rows: user } = await connection.query(queries.getEmailByEmail(), [
     email,
   ])
-  if (user && user.length !== 0) {
-    return true
-  }
+  if (user && user.length !== 0) return true
   return false
 }
 
-export const insertNewUser = async (user) => {
-  const { name, email, password } = user;
+export const insertUser = async (user) => {
+  const { name, email, password } = user
   await connection.query(queries.insertInUsers(), [name, email, password])
 }
 
-export const getPasswordByEmail = async (email) => {
+export const getPasswordEmail = async (email) => {
   const { rows: passwordCrypt } = await connection.query(
     queries.getPasswordByEmail(),
     [email]
-  );
-  return passwordCrypt[0]?.password;
+  )
+  return passwordCrypt[0]?.password
 }
 
 export const getUserByEmail = async (email) => {
   const { rows: user } = await connection.query(queries.getUserByEmail(), [
     email,
   ])
-  return user[0];
+  return user[0]
 }
 
 export const signupSchema = joi.object({

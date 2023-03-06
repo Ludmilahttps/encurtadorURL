@@ -1,13 +1,14 @@
+import { response } from "express"
 import { userModel } from "../schemas/index.js"
 
-export const getUserLinks = async (req, res) => {
-  const { id } = res.locals
+export const getUserLinks = async (req, response) => {
+  const { id } = response.locals
   try {
     const data = await userModel.getUserUrlsById(id)
-    res.status(200).send(data)
+    response.status(200).send(data)
   } catch (error) {
-    res
+    response
       .status(500)
-      .send(`Internal system error.\n More details: ${error.message}`)
+      .send(`Internal system error.`)
   }
 }

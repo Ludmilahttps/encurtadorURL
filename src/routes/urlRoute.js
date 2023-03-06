@@ -8,32 +8,32 @@ urlRoute.post(
   "/urls/shorten",
   urlMiddleware.validateUrl,
   urlMiddleware.validateHeader,
-  urlMiddleware.checkTokenBelongsSomeUser,
-  urlController.postShortUrl
-);
+  urlMiddleware.checkToken,
+  urlController.postUrl
+)
 
 urlRoute.get(
   "/urls/:id",
   urlMiddleware.validateParamsId,
-  urlMiddleware.checkParamsIdbelongsSomeUrl,
+  urlMiddleware.checkUrl,
   urlController.getUrlById
-);
+)
 
 urlRoute.get(
   "/urls/open/:shortUrl",
-  urlMiddleware.validateParamsShortUrl,
-  urlMiddleware.checkParamsShortUrlExists,
-  urlController.openShortUrl
-);
+  urlMiddleware.validateParamsUrl,
+  urlMiddleware.checkUrlExists,
+  urlController.openUrl
+)
 
 urlRoute.delete(
   "/urls/:id",
   urlMiddleware.validateParamsId,
   urlMiddleware.validateHeader,
-  urlMiddleware.checkTokenBelongsSomeUser,
-  urlMiddleware.checkParamsIdbelongsSomeUrl,
-  urlMiddleware.checkUserTokenBelongsToUrlOwner,
+  urlMiddleware.checkToken,
+  urlMiddleware.checkUrl,
+  urlMiddleware.checkUserUrl,
   urlController.deleteUrl
-);
+)
 
 export { urlRoute }

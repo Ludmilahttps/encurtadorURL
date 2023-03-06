@@ -9,13 +9,11 @@ export const insertInUrls = async (urlObject) => {
   return false
 }
 
-export const getUrlIdByShortUrl = async (shortUrl) => {
+export const getShortUrl = async (shortUrl) => {
   const { rows: id } = await connection.query(queries.getUrlIdbyshortUrl(), [
     shortUrl,
-  ]);
-  if (id && id.length !== 0) {
-    return id[0].id
-  }
+  ])
+  if (id && id.length !== 0) return id[0].id
   return false
 }
 
@@ -24,9 +22,7 @@ export const getshortUrlByUrlAndUserId = async (userId, url) => {
     queries.getshortUrlByUserIdAndUrl(),
     [url, userId]
   )
-  if (shortUrl && shortUrl.length !== 0) {
-    return shortUrl[0].shortUrl
-  }
+  if (shortUrl && shortUrl.length !== 0)  return shortUrl[0].shortUrl
   return false
 }
 
@@ -34,16 +30,14 @@ export const insertInUrlsUsers = async (urlId, userId) => {
   const inserted = await connection.query(queries.insertUrlsUsers(), [
     urlId,
     userId,
-  ]);
-  if (inserted) return true;
+  ])
+  if (inserted) return true
   return false
 }
 
 export const getUrlsById = async (id) => {
   const { rows: url } = await connection.query(queries.getUrlById(), [id]);
-  if (url && url.length !== 0) {
-    return url[0]
-  }
+  if (url && url.length !== 0) return url[0]
   return false
 }
 
@@ -51,10 +45,8 @@ export const getVisitsCountByShortUrl = async (shortUrl) => {
   const { rows: sum } = await connection.query(
     queries.getVisitCountByShortId(),
     [shortUrl]
-  );
-  if (sum && sum.length !== 0) {
-    return sum[0]
-  }
+  )
+  if (sum && sum.length !== 0)  return sum[0]
   return false
 }
 
@@ -62,18 +54,16 @@ export const updateVisitCountByShortUrl = async (newVisitCount, shortUrl) => {
   const updated = await connection.query(queries.updateVisitCount(), [
     newVisitCount,
     shortUrl,
-  ]);
+  ])
   return updated
 }
 
-export const getUserIdByUrlIdAndTokenId = async (urlId, tokenId) => {
+export const getUserId = async (urlId, tokenId) => {
   const { rows: userId } = await connection.query(queries.getUserIdByUrlid(), [
     urlId,
     tokenId,
   ])
-  if (userId && userId.length !== 0) {
-    return userId[0].userId
-  }
+  if (userId && userId.length !== 0) return userId[0].userId
   return false
 }
 
@@ -90,9 +80,7 @@ export const deleteUrlsUsersByUrlId = async (urlId) => {
 export const urlSchema = joi.object({
   url: joi
     .string()
-    .pattern(
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/
-    )
+    .pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/)
     .required(),
 })
 

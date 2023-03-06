@@ -7,7 +7,7 @@ const userRoute = Router()
 userRoute.get(
   "/users/me",
   urlMiddleware.validateHeader,
-  urlMiddleware.checkTokenBelongsSomeUser,
+  urlMiddleware.checkToken,
   userController.getUserLinks
 )
 

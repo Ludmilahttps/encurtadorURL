@@ -1,13 +1,14 @@
+import { response } from "express"
 import { rankingModel } from "../schemas/index.js"
 
-export const getRanking = async (req, res) => {
+export const getRanking = async (request, response) => {
   try {
     const ranking = await rankingModel.getRankings()
-    if (!ranking) return res.status(404).send("Ranking not found!")
-    res.status(200).send(ranking)
+    if (!ranking) return response.status(404).send("Ranking not found!")
+    response.status(200).send(ranking)
   } catch (error) {
-    res
+    response
       .status(500)
-      .send(`Internal system error.\n More details: ${error.message}`)
+      .send(`Internal system error.`)
   }
 }

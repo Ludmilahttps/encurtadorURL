@@ -6,16 +6,16 @@ const authRoute = Router()
 
 authRoute.post(
   "/signup",
-  authMiddleware.validateSignUp,
+  authMiddleware.valSignUp,
   authMiddleware.checkEmail,
   authController.signUp
-);
+)
 
 authRoute.post(
   "/signin",
-  authMiddleware.validateSignIn,
+  authMiddleware.valSignIn,
   authMiddleware.checkPassword,
   authController.signIn
-);
+)
 
 export { authRoute }

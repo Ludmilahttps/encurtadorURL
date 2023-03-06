@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import { authModel } from "../schemas/index.js"
+import { response } from "express"
 
 dotenv.config()
 const EXPIRE_TIME = 24 * 60 * 60
@@ -19,26 +20,26 @@ export const signUp = async (req, res) => {
   };
 
   try {
-    await authModel.insertNewUser(user)
+    await authModel.insertUser(user)
     res.status(201).send("Customer registered!")
   } catch (error) {
     res
       .status(500)
       .send(`Internal system error.\n More details: ${error.message}`)
   }
-};
+}
 
-export const signIn = async (req, res) => {
-  const { email } = res.locals.user
+export const signIn = async (request, response) => {
+  const { email } = response.locals.user
   try {
     const user = await authModel.getUserByEmail(email)
     const { id: userId } = user
     const data = { userId }
     const { JWT_SECRET } = process.env
     const token = jwt.sign(data, JWT_SECRET, jwtExpire)
-    res.status(200).send(token)
+    response.status(200).send(token)
   } catch (error) {
-    res
+    response
       .status(500)
       .send(`Internal system error.\n More details: ${error.message}`)
   }
